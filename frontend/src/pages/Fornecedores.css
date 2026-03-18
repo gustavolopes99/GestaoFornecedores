@@ -1,0 +1,71 @@
+.fornecedores-container {
+  padding: 20px;
+}
+
+.form-fornecedor {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-fornecedor h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.form-fornecedor input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-fornecedor button {
+  background-color: #4CAF50;
+  color: white;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.form-fornecedor button:hover {
+  background-color: #45a049;
+}
+
+.tabela-fornecedores {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tabela-fornecedores thead {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.tabela-fornecedores th,
+.tabela-fornecedores td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabela-fornecedores tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.btn-editar {
+  background-color: #2196F3;
+  color: white;
+  margin-right: 5px;
+}
+
+.btn-deletar {
+  background-color: #f44336;
+  color: white;
+}
