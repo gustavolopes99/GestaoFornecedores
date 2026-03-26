@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.config import Base, engine, settings
-from app.routes import fornecedor, funcionario, tarefa
+from app.routes import fornecedor, funcionario
 import uvicorn
+
+from backend.app.routes import tarefa
 
 # Criar tabelas no banco de dados
 Base.metadata.create_all(bind=engine)

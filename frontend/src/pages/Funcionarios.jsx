@@ -46,7 +46,7 @@ export default function Funcionarios() {
     const { name, value } = e.target;
     let valorProcessado = value;
     if (name === 'cpf') valorProcessado = formatarCPF(value);
-    if (name === 'telefone') valorProcessado = formatarCPF(value);
+    if (name === 'telefone') valorProcessado = formatarTelefone(value);
     
     setForm({ ...form, [name]: valorProcessado });
 

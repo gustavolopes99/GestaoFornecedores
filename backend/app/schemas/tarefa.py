@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 from enum import Enum
+from decimal import Decimal
 
 class StatusTarefa(str, Enum):
     pendente = "pendente"
@@ -21,8 +22,9 @@ class TarefaBase(BaseModel):
     status: StatusTarefa = StatusTarefa.pendente
     prioridade: PrioridadeTarefa = PrioridadeTarefa.media
     prazo: Optional[datetime] = None
+    valor: Optional[Decimal] = None
     fornecedor_id: Optional[int] = None
-    funcionario_id: Optional[int] = None
+    criador_id: Optional[int] = None
 
 class TarefaCreate(TarefaBase):
     pass
@@ -33,14 +35,14 @@ class TarefaUpdate(BaseModel):
     status: Optional[StatusTarefa] = None
     prioridade: Optional[PrioridadeTarefa] = None
     prazo: Optional[datetime] = None
-    valor: Optional[float] = None
+    valor: Optional[Decimal] = None
     fornecedor_id: Optional[int] = None
-    funcionario_id: Optional[int] = None
+    criador_id: Optional[int] = None
 
 class TarefaResponse(TarefaBase):
     id: int
-    data_criacao: datetime
-    data_atualizacao: Optional[datetime]
-    
+    data_criacao: Optional[datetime] = None
+    data_atualizacao: Optional[datetime] = None
+
     class Config:
         from_attributes = True
