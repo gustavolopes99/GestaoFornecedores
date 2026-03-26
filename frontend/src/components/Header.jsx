@@ -7,13 +7,13 @@ export default function Header() {
     <header className="header">
       <div className="header-container">
         <div className="logo">
-          <h1>GestãoApp</h1>
+          <h1>API</h1>
         </div>
         <nav className="nav">
-          <Link to="/">Home</Link>
+          <Link to="/">Início</Link>
           <Link to="/fornecedores">Fornecedores</Link>
-          <Link to="/funcionarios">Funcionários</Link>
-          <Link to="/tarefas">Tarefas</Link>
+          <Link to="/funcionarios">Criadores</Link>
+          <Link to="/tarefas">Jobs</Link>
         </nav>
       </div>
     </header>

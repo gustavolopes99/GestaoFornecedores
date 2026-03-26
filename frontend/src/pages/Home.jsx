@@ -6,33 +6,34 @@ export default function Home() {
   return (
     <div className="home-container">
       <div className="hero">
-        <h1>Gestão de Fornecedores</h1>
-        <p>Sistema integrado para gerenciar fornecedores, tarefas e funcionários</p>
+        <h1>Gestão de Jobs</h1>
+        <p>Gerenciamento de criadores, tarefas e funcionários</p>
       </div>
 
       <div className="cards-container">
         <div className="card">
           <h2>Fornecedores</h2>
-          <p>Cadastre e gerencie seus fornecedores</p>
+          <p>Cadastre e edite os fornecedores</p>
           <Link to="/fornecedores" className="btn-primary">
             Acessar
           </Link>
         </div>
 
         <div className="card">
-          <h2>Funcionários</h2>
-          <p>Controle seus funcionários e equipes</p>
+          <h2>Criadores</h2>
+          <p>Controle sua equipe</p>
           <Link to="/funcionarios" className="btn-primary">
             Acessar
           </Link>
         </div>
 
         <div className="card">
-          <h2>Tarefas</h2>
+          <h2>Jobs</h2>
           <p>Organize suas tarefas e prazos</p>
           <Link to="/tarefas" className="btn-primary">
             Acessar
           </Link>
+
         </div>
       </div>
     </div>

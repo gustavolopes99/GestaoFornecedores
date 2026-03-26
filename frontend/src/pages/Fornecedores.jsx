@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { fornecedorService } from '../services/api';
+import InputMasked from '../components/InputMasked';
+import { 
+  formatarCNPJ, 
+  formatarTelefone, 
+  formatarCEP,
+  validarCNPJ
+} from '../utils/mascaras';
 import './Fornecedores.css';
 
 export default function Fornecedores() {
+  const [erros, setErros] = useState({});
   const [fornecedores, setFornecedores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -17,29 +25,41 @@ export default function Fornecedores() {
   });
   const [editando, setEditando] = useState(null);
 
-  useEffect(() => {
-    carregarFornecedores();
-  }, []);
-
-  const carregarFornecedores = async () => {
-    setLoading(true);
-    try {
-      const response = await fornecedorService.listar();
-      setFornecedores(response.data);
-    } catch (erro) {
-      console.error('Erro ao carregar fornecedores:', erro);
-    } finally {
-      setLoading(false);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const valorFormatado = name === 'telefone' ? formatarTelefone(value) : value;  
+    setForm({ ...form, [name]: valorFormatado });
+    // Limpar erro do campo quando usuário começa a digitar
+    if (erros[name]) {
+      setErros({ ...erros, [name]: '' });
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+  const handleBlurCNPJ = (e) => {
+    const cnpj = e.target.value;
+    if (cnpj && !validarCNPJ(cnpj)) {
+      setErros({ ...erros, cnpj: 'CNPJ inválido' });
+    }
+  };
+
+  const validarFormulario = () => {
+    const novosErros = {};
+    
+    if (!form.nome.trim()) novosErros.nome = 'Nome é obrigatório';
+    if (!form.cnpj.trim()) novosErros.cnpj = 'CNPJ é obrigatório';
+    else if (!validarCNPJ(form.cnpj)) novosErros.cnpj = 'CNPJ inválido';
+    
+    if (!form.email.trim()) novosErros.email = 'Email é obrigatório';
+    
+    setErros(novosErros);
+    return Object.keys(novosErros).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validarFormulario()) return;
+    
     try {
       if (editando) {
         await fornecedorService.atualizar(editando, form);
@@ -60,6 +80,23 @@ export default function Fornecedores() {
       carregarFornecedores();
     } catch (erro) {
       console.error('Erro ao salvar fornecedor:', erro);
+      setErros({ submit: 'Erro ao salvar. Tente novamente.' });
+    }
+  };
+
+  useEffect(() => {
+    carregarFornecedores();
+  }, []);
+
+  const carregarFornecedores = async () => {
+    setLoading(true);
+    try {
+      const response = await fornecedorService.listar();
+      setFornecedores(response.data);
+    } catch (erro) {
+      console.error('Erro ao carregar fornecedores:', erro);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,90 +123,85 @@ export default function Fornecedores() {
       <form onSubmit={handleSubmit} className="form-fornecedor">
         <h2>{editando ? 'Editar Fornecedor' : 'Novo Fornecedor'}</h2>
         
-        <input
-          type="text"
+        <InputMasked
           name="nome"
-          placeholder="Nome"
+          placeholder="Nome (máx 100 caracteres)"
           value={form.nome}
           onChange={handleInputChange}
+          maxLength="100"
+          error={erros.nome}
           required
         />
         
-        <input
-          type="text"
+        <InputMasked
           name="cnpj"
-          placeholder="CNPJ"
+          placeholder="CNPJ (XX.XXX.XXX/0001-XX)"
           value={form.cnpj}
           onChange={handleInputChange}
+          maskFunction={formatarCNPJ}
+          maxLength="18"
+          onBlur={handleBlurCNPJ}
+          error={erros.cnpj}
           required
         />
         
-        <input
-          type="email"
+        <InputMasked
           name="email"
+          type="email"
           placeholder="Email"
           value={form.email}
           onChange={handleInputChange}
+          maxLength="100"
+          error={erros.email}
           required
         />
         
-        <input
-          type="tel"
+        <InputMasked
           name="telefone"
-          placeholder="Telefone"
+          type="tel"
+          placeholder="Telefone (XX)XXXXX-XXXX"
           value={form.telefone}
           onChange={handleInputChange}
+          maskFunction={formatarTelefone}
+          maxLength="15"
         />
         
-        <input
-          type="text"
+        <InputMasked
           name="endereco"
-          placeholder="Endereço"
+          placeholder="Endereço (máx 150 caracteres)"
           value={form.endereco}
           onChange={handleInputChange}
+          maxLength="150"
+          className="input-fullwidth"
         />
         
-        <input
-          type="text"
+        <InputMasked
           name="cidade"
-          placeholder="Cidade"
+          placeholder="Cidade (máx 50 caracteres)"
           value={form.cidade}
           onChange={handleInputChange}
+          maxLength="50"
         />
         
-        <input
-          type="text"
+        <InputMasked
           name="estado"
-          placeholder="Estado"
+          placeholder="Estado (XX)"
           value={form.estado}
           onChange={handleInputChange}
           maxLength="2"
         />
         
-        <input
-          type="text"
+        <InputMasked
           name="cep"
-          placeholder="CEP"
+          placeholder="CEP (XXXXX-XXX)"
           value={form.cep}
           onChange={handleInputChange}
+          maskFunction={formatarCEP}
+          maxLength="9"
         />
         
-        <button type="submit">{editando ? 'Atualizar' : 'Criar'}</button>
-        {editando && (
-          <button type="button" onClick={() => {
-            setEditando(null);
-            setForm({
-              nome: '',
-              cnpj: '',
-              email: '',
-              telefone: '',
-              endereco: '',
-              cidade: '',
-              estado: '',
-              cep: '',
-            });
-          }}>Cancelar</button>
-        )}
+        <button type="submit">{editando ? 'Atualizar' : 'Criar'} Fornecedor</button>
+        {erros.submit && <div className="error-message">{erros.submit}</div>}
       </form>
 
       {loading ? (
@@ -178,7 +210,6 @@ export default function Fornecedores() {
         <table className="tabela-fornecedores">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nome</th>
               <th>CNPJ</th>
               <th>Email</th>
@@ -190,17 +221,16 @@ export default function Fornecedores() {
           <tbody>
             {fornecedores.map((fornecedor) => (
               <tr key={fornecedor.id}>
-                <td>{fornecedor.id}</td>
                 <td>{fornecedor.nome}</td>
                 <td>{fornecedor.cnpj}</td>
                 <td>{fornecedor.email}</td>
                 <td>{fornecedor.telefone}</td>
                 <td>{fornecedor.cidade}</td>
                 <td>
-                  <button onClick={() => handleEditar(fornecedor)} className="btn-editar">
+                  <button className="btn-editar" onClick={() => handleEditar(fornecedor)}>
                     Editar
                   </button>
-                  <button onClick={() => handleDeletar(fornecedor.id)} className="btn-deletar">
+                  <button className="btn-deletar" onClick={() => handleDeletar(fornecedor.id)}>
                     Deletar
                   </button>
                 </td>

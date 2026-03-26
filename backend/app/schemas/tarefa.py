@@ -13,14 +13,14 @@ class PrioridadeTarefa(str, Enum):
     baixa = "baixa"
     media = "media"
     alta = "alta"
-    critica = "critica"
+    urgente = "urgente"
 
 class TarefaBase(BaseModel):
     titulo: str
     descricao: Optional[str] = None
     status: StatusTarefa = StatusTarefa.pendente
     prioridade: PrioridadeTarefa = PrioridadeTarefa.media
-    data_vencimento: Optional[datetime] = None
+    prazo: Optional[datetime] = None
     fornecedor_id: Optional[int] = None
     funcionario_id: Optional[int] = None
 
@@ -32,7 +32,8 @@ class TarefaUpdate(BaseModel):
     descricao: Optional[str] = None
     status: Optional[StatusTarefa] = None
     prioridade: Optional[PrioridadeTarefa] = None
-    data_vencimento: Optional[datetime] = None
+    prazo: Optional[datetime] = None
+    valor: Optional[float] = None
     fornecedor_id: Optional[int] = None
     funcionario_id: Optional[int] = None
 

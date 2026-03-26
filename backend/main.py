@@ -2,12 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.config import Base, engine, settings
 from app.routes import fornecedor, funcionario, tarefa
+import uvicorn
 
 # Criar tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Gestão de Fornecedores, Tarefas e Funcionários",
+    title="Gestão de Jobs, Tarefas e Funcionários",
     description="API para gerenciar fornecedores, tarefas e funcionários",
     version="1.0.0"
 )
@@ -29,7 +30,7 @@ app.include_router(tarefa.router)
 @app.get("/")
 def read_root():
     return {
-        "mensagem": "Bem-vindo à API de Gestão de Fornecedores",
+        "mensagem": "Bem-vindo à API de Gestão de Jobs",
         "documentação": "/docs",
         "status": "ativo"
     }
@@ -39,7 +40,6 @@ def health_check():
     return {"status": "ok"}
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(
         "main:app",
         host=settings.api_host,

@@ -5,11 +5,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    host: true, // Garante que aceite conexões externas ao container
+    watch: {
+      usePolling: true, // ESSENCIAL: faz o Vite checar mudanças por tempo
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://backend:8000', // DICA: use o nome do serviço 'backend' do docker-compose
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
+        // Removi o rewrite se sua API já espera o prefixo /api
       }
     }
   }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { tarefaService } from '../services/api';
 import './Tarefas.css';
+import Funcionarios from './Funcionarios';
 
 export default function Tarefas() {
   const [tarefas, setTarefas] = useState([]);
@@ -10,7 +11,7 @@ export default function Tarefas() {
     descricao: '',
     status: 'pendente',
     prioridade: 'media',
-    data_vencimento: '',
+    prazo: '',
     fornecedor_id: '',
     funcionario_id: '',
   });
@@ -51,7 +52,7 @@ export default function Tarefas() {
         descricao: '',
         status: 'pendente',
         prioridade: 'media',
-        data_vencimento: '',
+        prazo: '',
         fornecedor_id: '',
         funcionario_id: '',
       });
@@ -79,10 +80,10 @@ export default function Tarefas() {
 
   return (
     <div className="tarefas-container">
-      <h1>Gerenciar Tarefas</h1>
+      <h1>Gerenciar Jobs</h1>
 
       <form onSubmit={handleSubmit} className="form-tarefa">
-        <h2>{editando ? 'Editar Tarefa' : 'Nova Tarefa'}</h2>
+        <h2>{editando ? 'Editar Job' : 'Novo Job'}</h2>
         
         <input
           type="text"
@@ -112,29 +113,23 @@ export default function Tarefas() {
           <option value="baixa">Baixa</option>
           <option value="media">Média</option>
           <option value="alta">Alta</option>
-          <option value="critica">Crítica</option>
+          <option value="urgente">Crítica</option>
         </select>
+
+        <select name="criador_id" defaultValue="">
+          <option value="" disabled>Selecione um criador</option>
+          {funcionarios.map(f => (
+            <option key={f.id} value={f.id}>
+              {f.nome}
+            </option>))}
+        </select>
+
+        <input type="number" name="valor" placeholder="Valor (R$)" step="0.01"/>
         
         <input
           type="date"
-          name="data_vencimento"
-          value={form.data_vencimento}
-          onChange={handleInputChange}
-        />
-        
-        <input
-          type="number"
-          name="fornecedor_id"
-          placeholder="ID do Fornecedor (opcional)"
-          value={form.fornecedor_id}
-          onChange={handleInputChange}
-        />
-        
-        <input
-          type="number"
-          name="funcionario_id"
-          placeholder="ID do Funcionário (opcional)"
-          value={form.funcionario_id}
+          name="prazo"
+          value={form.prazo}
           onChange={handleInputChange}
         />
         
@@ -147,7 +142,7 @@ export default function Tarefas() {
               descricao: '',
               status: 'pendente',
               prioridade: 'media',
-              data_vencimento: '',
+              prazo: '',
               fornecedor_id: '',
               funcionario_id: '',
             });
@@ -165,7 +160,7 @@ export default function Tarefas() {
               <th>Título</th>
               <th>Status</th>
               <th>Prioridade</th>
-              <th>Vencimento</th>
+              <th>Prazo</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -176,7 +171,7 @@ export default function Tarefas() {
                 <td>{tarefa.titulo}</td>
                 <td>{tarefa.status}</td>
                 <td>{tarefa.prioridade}</td>
-                <td>{tarefa.data_vencimento}</td>
+                <td>{tarefa.prazo}</td>
                 <td>
                   <button onClick={() => handleEditar(tarefa)} className="btn-editar">
                     Editar

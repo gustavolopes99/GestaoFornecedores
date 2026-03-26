@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, ForeignKey, Enum, Numeric
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database.config import Base
@@ -14,7 +14,7 @@ class PrioridadeTarefa(str, enum.Enum):
     baixa = "baixa"
     media = "media"
     alta = "alta"
-    critica = "critica"
+    urgente = "urgente"
 
 class Tarefa(Base):
     __tablename__ = "tarefas"
@@ -24,14 +24,15 @@ class Tarefa(Base):
     descricao = Column(Text, nullable=True)
     status = Column(Enum(StatusTarefa), default=StatusTarefa.pendente)
     prioridade = Column(Enum(PrioridadeTarefa), default=PrioridadeTarefa.media)
-    data_vencimento = Column(DateTime, nullable=True)
+    prazo = Column(DateTime, nullable=True)
+    valor = Column(Numeric(10, 2))
     data_criacao = Column(DateTime, server_default=func.now())
     data_atualizacao = Column(DateTime, onupdate=func.now())
     
     # Chaves estrangeiras
     fornecedor_id = Column(Integer, ForeignKey("fornecedores.id"), nullable=True)
-    funcionario_id = Column(Integer, ForeignKey("funcionarios.id"), nullable=True)
-    
+    criador_id = Column(Integer, ForeignKey("funcionarios.id"), nullable=True)
+
     # Relacionamentos
     fornecedor = relationship("Fornecedor", back_populates="tarefas")
     funcionario = relationship("Funcionario", back_populates="tarefas")

@@ -12,7 +12,6 @@
 
 ### 1. Pré-requisitos
 Certifique-se de ter Docker e Docker Compose instalados:
-
 ```powershell
 docker --version
 docker-compose --version

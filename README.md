@@ -145,7 +145,7 @@ A documentação interativa (Swagger) estará disponível para testar os endpoin
 - titulo
 - descricao
 - status (pendente, em_progresso, concluida, cancelada)
-- prioridade (baixa, media, alta, critica)
+- prioridade (baixa, media, alta, urgente)
 - data_vencimento
 - fornecedor_id (FK)
 - funcionario_id (FK)
