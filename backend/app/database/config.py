@@ -6,9 +6,10 @@ from typing import Optional
 import os
 
 class Settings(BaseSettings):
-    database_url: str = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/gestao_fornecedores")
+    database_url: str = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@postgres:5432/gestao_fornecedores")
     api_host: str = os.getenv("API_HOST", "0.0.0.0")
     api_port: int = int(os.getenv("API_PORT", 8000))
+    #SECRET_KEY = t88GG4lMzpXyvyfLbjvV1Tfm+NdJ4gGx23mimWSjZOc=
     debug: bool = os.getenv("DEBUG", "True").lower() == "true"
     
     class Config:

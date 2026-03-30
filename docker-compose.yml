@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgres: # Em produção, a porta 5432 não precisa ser exposta publicamente.
     image: postgres:15
     container_name: gestao_db
     environment:
@@ -18,19 +18,19 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: gestao_api
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app
+    # Comando para produção: sem reload automático
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gestao_fornecedores
-      API_HOST: 0.0.0.0
-      API_PORT: 8000
-      DEBUG: "True"
-      
+    # As variáveis de ambiente devem ser gerenciadas por um arquivo .env no servidor
+    # Exemplo: DATABASE_URL=postgresql://postgres:postgres@postgres:5432/gestao_fornecedores
+    env_file:
+      - ./backend/.env
     depends_on:
       - postgres
-    volumes:
-      - ./backend:/app
+    # Em produção, o código é copiado para a imagem durante o build, não montado por volume.
+    # volumes:
+    #   - ./backend:/app
     networks:
       - gestao_network
       
@@ -40,16 +40,18 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: gestao_frontend
-    command: npm run dev -- --host 0.0.0.0 --port 3000
+    # Comando para produção: serve os arquivos estáticos gerados pelo 'npm run build' (do Vite)
+    command: serve -s dist -l 3000
     ports:
       - "3000:3000"
-    environment:
-      VITE_API_URL: http://localhost:8000/api
+    # A variável de ambiente para a URL da API é lida de um arquivo .env
+    env_file:
+      - ./frontend/.env
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    # Em produção, o código é copiado para a imagem, não montado por volume.
+    # volumes:
+    #   - ./frontend:/app
     networks:
       - gestao_network
 

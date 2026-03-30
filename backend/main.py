@@ -1,10 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database.config import Base, engine, settings
-from app.routes import fornecedor, funcionario
+from app.routes import fornecedor, funcionario, tarefa
 import uvicorn
-
-from backend.app.routes import tarefa
 
 # Criar tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -15,10 +13,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Lista de origens permitidas. Em produção, substitua "*" pelo domínio do seu frontend.
+origins = [
+    "http://localhost:3000", # Para desenvolvimento local
+    # "http://app.seucliente.com", # Domínio de produção do cliente
+]
+
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Em produção, especificar os domínios permitidos
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
