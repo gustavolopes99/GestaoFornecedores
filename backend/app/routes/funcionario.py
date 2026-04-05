@@ -21,7 +21,7 @@ def obter_funcionario(funcionario_id: int, db: Session = Depends(get_db)):
 
 @router.post("", response_model=FuncionarioResponse, status_code=status.HTTP_201_CREATED)
 def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_db)):
-    db_funcionario = Funcionario(**funcionario.dict())
+    db_funcionario = Funcionario(**funcionario.model_dump())
     db.add(db_funcionario)
     db.commit()
     db.refresh(db_funcionario)
@@ -33,7 +33,7 @@ def atualizar_funcionario(funcionario_id: int, funcionario: FuncionarioUpdate, d
     if not db_funcionario:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Funcionário não encontrado")
     
-    for campo, valor in funcionario.dict(exclude_unset=True).items():
+    for campo, valor in funcionario.model_dump(exclude_unset=True).items():
         setattr(db_funcionario, campo, valor)
     
     db.commit()

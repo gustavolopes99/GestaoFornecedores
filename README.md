@@ -15,8 +15,7 @@ GestaoFornecedores/
 ## 🚀 Tecnologias
 
 - **Backend:** Python, FastAPI, SQLAlchemy, PostgreSQL
-- **Frontend:** React, Vite, Axios, React Router
-- **Database:** PostgreSQL
+- **Frontend:** React, Vite, Axios, React Router- **Database:** Oracle Database (ou PostgreSQL)
 - **Infrastructure:** Docker, Docker Compose
 
 ## 📦 Pré-requisitos
@@ -58,8 +57,8 @@ pip install -r requirements.txt
 # Copiar arquivo de exemplo
 cp .env.example .env
 
-# Editar .env com suas configurações PostgreSQL
-# DATABASE_URL=postgresql://user:password@localhost:5432/gestao_fornecedores
+# Editar .env com suas configurações de banco de dados
+# Exemplo Oracle: DATABASE_URL=oracle+oracledb://system:oracle@localhost:1521/XE
 
 # Executar
 uvicorn main:app --reload
@@ -157,7 +156,7 @@ A documentação interativa (Swagger) estará disponível para testar os endpoin
 ### Backend (.env)
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/gestao_fornecedores
+DATABASE_URL=oracle+oracledb://system:oracle@localhost:1521/XE
 API_HOST=0.0.0.0
 API_PORT=8000
 DEBUG=True

@@ -21,7 +21,7 @@ def obter_fornecedor(fornecedor_id: int, db: Session = Depends(get_db)):
 
 @router.post("", response_model=FornecedorResponse, status_code=status.HTTP_201_CREATED)
 def criar_fornecedor(fornecedor: FornecedorCreate, db: Session = Depends(get_db)):
-    db_fornecedor = Fornecedor(**fornecedor.dict())
+    db_fornecedor = Fornecedor(**fornecedor.model_dump())
     db.add(db_fornecedor)
     db.commit()
     db.refresh(db_fornecedor)
@@ -33,7 +33,7 @@ def atualizar_fornecedor(fornecedor_id: int, fornecedor: FornecedorUpdate, db: S
     if not db_fornecedor:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Fornecedor não encontrado")
     
-    for campo, valor in fornecedor.dict(exclude_unset=True).items():
+    for campo, valor in fornecedor.model_dump(exclude_unset=True).items():
         setattr(db_fornecedor, campo, valor)
     
     db.commit()

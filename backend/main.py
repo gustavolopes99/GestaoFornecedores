@@ -13,11 +13,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Lista de origens permitidas. Em produção, substitua "*" pelo domínio do seu frontend.
+# Em produção, defina a variável de ambiente `CORS_ORIGINS` com os domínios do frontend
+# Ex: "http://seu-dominio.com,http://www.seu-dominio.com"
+cors_origins = settings.cors_origins.split(",") if settings.cors_origins else []
+
 origins = [
     "http://localhost:3000", # Para desenvolvimento local
-    # "http://app.seucliente.com", # Domínio de produção do cliente
-]
+    *cors_origins
+] if cors_origins else ["*"] # Permite tudo se não especificado, mas é mais seguro especificar
 
 # CORS Configuration
 app.add_middleware(

@@ -60,7 +60,8 @@ cp .env.example .env
 
 Edite `.env`:
 ```env
-DATABASE_URL=postgresql://postgres:password@localhost:5432/gestao_fornecedores
+# Para Oracle:
+DATABASE_URL=oracle+oracledb://system:oracle@localhost:1521/XE
 API_HOST=0.0.0.0
 API_PORT=8000
 DEBUG=True
@@ -193,9 +194,7 @@ print("Dados de teste adicionados com sucesso!")
 ## 🐛 Solução de Problemas
 
 ### Erro: "Cannot connect to database"
-- Verificar se PostgreSQL está rodando
-- Verificar credenciais em `.env`
-- Verificar se a database foi criada
+- Verificar se o serviço do Oracle ou PostgreSQL está rodando
 
 ### Erro: "Port already in use"
 - Mudar porta em `.env` ou `docker-compose.yml`

@@ -1,15 +1,15 @@
 services:
-  postgres: # Em produção, a porta 5432 não precisa ser exposta publicamente.
-    image: postgres:15
-    container_name: gestao_db
+  oracle-db:
+    # Imagem de desenvolvimento do Oracle Database XE. Leve e rápida.
+    image: gvenzl/oracle-xe:21-slim-faststart
+    container_name: gestao_db_oracle
     environment:
-      POSTGRES_DB: gestao_fornecedores
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      # A senha para os usuários SYS, SYSTEM e PDBADMIN.
+      ORACLE_PASSWORD: oracle
     ports:
-      - "5432:5432"
+      - "1521:1521"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - oracle_data:/opt/oracle/oradata
     networks:
       - gestao_network
 
@@ -24,10 +24,11 @@ services:
       - "8000:8000"
     # As variáveis de ambiente devem ser gerenciadas por um arquivo .env no servidor
     # Exemplo: DATABASE_URL=postgresql://postgres:postgres@postgres:5432/gestao_fornecedores
+    # Para Oracle: DATABASE_URL=oracle+oracledb://system:oracle@oracle-db:1521/XE
     env_file:
       - ./backend/.env
     depends_on:
-      - postgres
+      - oracle-db
     # Em produção, o código é copiado para a imagem durante o build, não montado por volume.
     # volumes:
     #   - ./backend:/app
@@ -56,7 +57,7 @@ services:
       - gestao_network
 
 volumes:
-  postgres_data:
+  oracle_data:
 
 networks:
   gestao_network:
