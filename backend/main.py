@@ -23,17 +23,22 @@ def on_startup():
 
 # Em produção, defina a variável de ambiente `CORS_ORIGINS` com os domínios do frontend
 # Ex: "http://seu-dominio.com,http://www.seu-dominio.com"
-cors_origins = settings.cors_origins.split(",") if settings.cors_origins else []
-
-origins = [
-    "http://localhost:3000", # Para desenvolvimento local
-    *cors_origins
-] if cors_origins else ["*"] # Permite tudo se não especificado, mas é mais seguro especificar
+def get_allowed_origins() -> list[str]:
+    """
+    Lê a variável de ambiente CORS_ORIGINS de forma segura e a processa.
+    Retorna uma lista de origens permitidas.
+    """
+    raw_origins = settings.cors_origins
+    if raw_origins:
+        # Divide por vírgula, remove espaços e filtra quaisquer strings vazias
+        return [origin.strip() for origin in raw_origins.split(',') if origin.strip()]
+    print("WARNING:  CORS_ORIGINS não definida. Permitindo todas as origens. Inseguro para produção.")
+    return ["*"]
 
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=get_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
