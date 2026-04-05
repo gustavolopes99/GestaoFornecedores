@@ -1,19 +1,27 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from pydantic_settings import BaseSettings
 from typing import Optional
-import os
 
 class Settings(BaseSettings):
-    database_url: str = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@postgres:5432/gestao_fornecedores")
-    api_host: str = os.getenv("API_HOST", "0.0.0.0")
-    api_port: int = int(os.getenv("API_PORT", 8000))
-    #SECRET_KEY = t88GG4lMzpXyvyfLbjvV1Tfm+NdJ4gGx23mimWSjZOc=
-    debug: bool = os.getenv("DEBUG", "True").lower() == "true"
-    
+    """
+    Gerencia as configurações da aplicação, lendo de variáveis de ambiente ou de um arquivo .env.
+    """
+    # Obrigatório: Lançará um erro claro se não for definido no ambiente.
+    # Ex: postgresql+psycopg2://user:password@host:port/dbname
+    database_url: str
+
+    # Opcionais com valores padrão, seguros para produção.
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+    debug: bool = False
+    cors_origins: Optional[str] = None
+
     class Config:
+        # Diz ao Pydantic para ler o arquivo .env se as variáveis não estiverem no ambiente.
         env_file = ".env"
+        env_file_encoding = "utf-8"
 
 settings = Settings()
 
