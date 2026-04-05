@@ -39,7 +39,28 @@ except ValidationError as e:
     # Encerra a aplicação para evitar que ela continue em um estado inválido.
     sys.exit(1)
 
-engine = create_engine(settings.database_url)
+try:
+    engine = create_engine(settings.database_url)
+except Exception as e:
+    # Captura erros como drivers de banco de dados ausentes (ex: usar uma URL Oracle sem 'oracledb' instalado).
+    print("="*80)
+    print("!!! ERRO AO INICIALIZAR O ENGINE DO BANCO DE DADOS (create_engine) !!!")
+    print("="*80)
+    print("A aplicação falhou ao configurar a conexão com o banco de dados.")
+    
+    # Oculta a senha da URL nos logs para segurança
+    safe_url = str(settings.database_url)
+    if '@' in safe_url and ':' in safe_url.split('@')[0]:
+        user_pass_part = safe_url.split('://')[1].split('@')[0]
+        safe_url = safe_url.replace(user_pass_part, f"{user_pass_part.split(':')[0]}:****")
+
+    print(f"--> URL configurada: {safe_url}")
+    print(f"--> Detalhes do erro: {e}")
+    print("--> Causa Provável: A 'DATABASE_URL' usa um dialeto (ex: 'oracle://') para o qual o driver não está instalado em 'requirements.txt'.")
+    print("--> Ação Necessária: Garanta que a DATABASE_URL corresponde ao driver instalado (ex: 'postgresql://' para 'psycopg2-binary').")
+    print("="*80)
+    sys.exit(1)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
